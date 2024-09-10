@@ -1,12 +1,59 @@
 version: 2
 
 sources:
-  - name: gz_raw_data
+  - name: raw
+    schema: gz_raw_data
     description: raw data of greenweez sales, product and shipping data
     tables:
       - name: sales
         identifier: raw_gz_sales
+        description: sales of Greenweez / we have one row per product_id found in each orders_id
+        columns:
+        - name: date_date
+          description: date of purchase
+        - name: orders_id
+          description: order_id for each purchase
+        - name: product_id
+          description: products associated with each orders_id
+        - name: revenue
+          description: revenue total by product_id
+        - name: quantity
+          description: quantity of products in each order
+        tests:
+          - unique:
+              column_name: "(orders_id || '-' || pdt_id)"
+        #freshness test
+        loaded_at_field: "CAST(date_date AS TIMESTAMP)"
+        freshness: 
+          error_after:
+            count: 90
+            period: day
+          warn_after:
+            count: 70
+            period: day
       - name: product
         identifier: raw_gz_product
+        description: Greenweez products and purchase prices / we have one row per product_id
+        columns:
+          - name: products_id
+            description: product_id of each product
+          - name: purchase_price
+            description: purchase price of each product
+        tests:
+          - unique:
+              column_name: products_id
       - name: ship
         identifier: raw_gz_ship
+        description: Greenweez orders and associated shipping fee, logistics costs and shipping costs / we have one row per order_id
+        columns:
+          - name: orders_id
+            description: order_id for each purchase
+          - name: shipping_fee
+            description: shipping_fee for each order_id
+          - name: logcost
+            description: logistics cost for each order_id
+          - name: ship_cost
+            description: shipping cost for each order_id
+        tests:
+          - unique:
+              column_name: orders_id
