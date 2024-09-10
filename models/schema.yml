@@ -1,8 +1,7 @@
 version: 2
 
-sources: 
-  - name: raw
-    schema: gz_raw_data
+sources:
+  - name: gz_raw_data
     description: raw data of greenweez sales, product and shipping data
     tables:
       - name: sales
