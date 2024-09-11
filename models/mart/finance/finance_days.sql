@@ -1,5 +1,5 @@
 --mart model: finance team wants the following data at a daily granularity.
-{{ config(materialized='table') }}
+--added materialisation as table {{ config(materialized='table') }}--removed and added materialisation at config level
 
 SELECT
     date_max
